@@ -10,14 +10,16 @@ public class EscapeRoom
     int m = 60;   
     int score = 0;
     String[] validCommands = { 
-      "right","left","up","down","r","l","u","d","jump","jr","jumpleft","jl","jumpup","ju","jumpdown","jd","pickup","p","trap","quit","q","replay","help","?"
+      "right","left","up","down","r","l","u","d",
+      "jump","jr","jumpleft","jl","jumpup","ju","jumpdown","jd",
+      "pickup","p","trap","quit","q","replay","help","?"
     };
     boolean play = true;
-    while (play)
-    {
+
+    while (play) {
       System.out.print("Enter command: ");
       String cmd = UserInput.getValidInput(validCommands);
-      
+
       if (cmd.equals("right") || cmd.equals("r")) {
         score += game.movePlayer(m,0);
       }
@@ -33,42 +35,26 @@ public class EscapeRoom
       else if (cmd.equals("jump") || cmd.equals("jr")) {
         int check1 = game.movePlayer(m,0);
         score += check1;
-        if (check1 == 0) {
-          score += game.movePlayer(m,0);
-        }
-        else {
-          System.out.println("Cannot jump over a wall.");
-        }
+        if (check1 == 0) score += game.movePlayer(m,0);
+        else System.out.println("Cannot jump over a wall.");
       }
       else if (cmd.equals("jumpleft") || cmd.equals("jl")) {
         int check1 = game.movePlayer(-m,0);
         score += check1;
-        if (check1 == 0) {
-          score += game.movePlayer(-m,0);
-        }
-        else {
-          System.out.println("Cannot jump over a wall.");
-        }
+        if (check1 == 0) score += game.movePlayer(-m,0);
+        else System.out.println("Cannot jump over a wall.");
       }
       else if (cmd.equals("jumpup") || cmd.equals("ju")) {
         int check1 = game.movePlayer(0,-m);
         score += check1;
-        if (check1 == 0) {
-          score += game.movePlayer(0,-m);
-        }
-        else {
-          System.out.println("Cannot jump over a wall.");
-        }
+        if (check1 == 0) score += game.movePlayer(0,-m);
+        else System.out.println("Cannot jump over a wall.");
       }
       else if (cmd.equals("jumpdown") || cmd.equals("jd")) {
         int check1 = game.movePlayer(0,m);
         score += check1;
-        if (check1 == 0) {
-          score += game.movePlayer(0,m);
-        }
-        else {
-          System.out.println("Cannot jump over a wall.");
-        }
+        if (check1 == 0) score += game.movePlayer(0,m);
+        else System.out.println("Cannot jump over a wall.");
       }
       else if (cmd.equals("pickup") || cmd.equals("p")) {
         score += game.pickUpPrizeHere();
@@ -92,19 +78,27 @@ public class EscapeRoom
       }
       else if (cmd.equals("quit") || cmd.equals("q")) {
         System.out.println("You quit the game.");
+        score = 0; // reset points to 0
         play = false;
       }
       if (game.isTrapHere()) {
-        score += game.springTrapHere();
-        System.out.println("You stepped on a trap!");
+        int trapScore = game.springTrapHere(); 
+        if (trapScore != 0) {
+          score -= 15;
+          System.out.println("You stepped on a trap! -15 points.");
+        }
       }
+
       if (game.playerAtEndPublic()) {
         System.out.println("You reached the far right side!");
         play = false;
       }
+
+      System.out.println("Current score: " + score + ", Steps taken: " + game.getSteps());
     }
+
     score += game.endAndScore();
-    System.out.println("score=" + score);
-    System.out.println("steps=" + game.getSteps());
+    System.out.println("Final score=" + score);
+    System.out.println("Total steps=" + game.getSteps());
   }
 }
