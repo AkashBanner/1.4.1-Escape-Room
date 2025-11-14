@@ -5,31 +5,19 @@ public class EscapeRoom
   {      
     System.out.println("Welcome to EscapeRoom!");
     System.out.println("Get to the other side of the room, avoiding walls and invisible traps,");
-    System.out.println("pick up all the prizes.\n");
-    
     GameGUI game = new GameGUI();
     game.createBoard();
-
     int m = 60;   
     int score = 0;
-
     String[] validCommands = { 
-      "right","left","up","down","r","l","u","d",
-      "jump","jr","jumpleft","jl","jumpup","ju","jumpdown","jd",
-      "pickup","p",
-      "trap",
-      "quit","q",
-      "replay",
-      "help","?"
+      "right","left","up","down","r","l","u","d","jump","jr","jumpleft","jl","jumpup","ju","jumpdown","jd","pickup","p","trap","quit","q","replay","help","?"
     };
-  
     boolean play = true;
-
     while (play)
     {
       System.out.print("Enter command: ");
       String cmd = UserInput.getValidInput(validCommands);
-
+      
       if (cmd.equals("right") || cmd.equals("r")) {
         score += game.movePlayer(m,0);
       }
@@ -44,53 +32,49 @@ public class EscapeRoom
       }
       else if (cmd.equals("jump") || cmd.equals("jr")) {
         int check1 = game.movePlayer(m,0);
+        score += check1;
         if (check1 == 0) {
-          int check2 = game.movePlayer(m,0);
-          score += check2;
+          score += game.movePlayer(m,0);
         }
         else {
           System.out.println("Cannot jump over a wall.");
-          score += check1;
         }
       }
       else if (cmd.equals("jumpleft") || cmd.equals("jl")) {
         int check1 = game.movePlayer(-m,0);
+        score += check1;
         if (check1 == 0) {
-          int check2 = game.movePlayer(-m,0);
-          score += check2;
+          score += game.movePlayer(-m,0);
         }
         else {
           System.out.println("Cannot jump over a wall.");
-          score += check1;
         }
       }
       else if (cmd.equals("jumpup") || cmd.equals("ju")) {
         int check1 = game.movePlayer(0,-m);
+        score += check1;
         if (check1 == 0) {
-          int check2 = game.movePlayer(0,-m);
-          score += check2;
+          score += game.movePlayer(0,-m);
         }
         else {
           System.out.println("Cannot jump over a wall.");
-          score += check1;
         }
       }
       else if (cmd.equals("jumpdown") || cmd.equals("jd")) {
         int check1 = game.movePlayer(0,m);
+        score += check1;
         if (check1 == 0) {
-          int check2 = game.movePlayer(0,m);
-          score += check2;
+          score += game.movePlayer(0,m);
         }
         else {
           System.out.println("Cannot jump over a wall.");
-          score += check1;
         }
       }
       else if (cmd.equals("pickup") || cmd.equals("p")) {
-        score += game.pickupPrize();
+        score += game.pickUpPrizeHere();
       }
       else if (cmd.equals("trap")) {
-        score += game.springTrap(0,0);
+        score += game.springTrapHere();
       }
       else if (cmd.equals("help") || cmd.equals("?")) {
         System.out.println("Commands:");
@@ -102,26 +86,25 @@ public class EscapeRoom
         System.out.println("quit or q");
         System.out.println();
       }
-
       else if (cmd.equals("replay")) {
-        score += game.replay();
+        score += game.replayBoard();
         System.out.println("Board reset. Steps cleared.");
       }
-
       else if (cmd.equals("quit") || cmd.equals("q")) {
         System.out.println("You quit the game.");
         play = false;
       }
-      if (gameAtEnd(game)) {
+      if (game.isTrapHere()) {
+        score += game.springTrapHere();
+        System.out.println("You stepped on a trap!");
+      }
+      if (game.playerAtEndPublic()) {
         System.out.println("You reached the far right side!");
         play = false;
       }
     }
-    score += game.endGame();
+    score += game.endAndScore();
     System.out.println("score=" + score);
     System.out.println("steps=" + game.getSteps());
-  }
-  public static boolean gameAtEnd(GameGUI game) {
-    return game.playerLoc.getX() > 510 - 120;   // error here, says "The field GameGUI.playerLoc is not visibleJava(33554503)"
   }
 }
