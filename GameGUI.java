@@ -30,7 +30,7 @@ public class GameGUI extends JComponent
   private static final int GRID_H = 5;
   private static final int START_LOC_X = 15;
   private static final int START_LOC_Y = 15;
-  
+
   // initial placement of player
   int x = START_LOC_X; 
   int y = START_LOC_Y;
@@ -283,15 +283,33 @@ public class GameGUI extends JComponent
     System.out.println("OOPS, NO PRIZE HERE");
     return -prizeVal;  
   }
-
-  /**
-   * Return the numbers of steps the player has taken.
-   * <P>
-   * @return the number of steps
-   */
   public int getSteps()
   {
     return playerSteps;
+  }
+  public int getPlayerX() {
+    return playerLoc.x;
+  }
+  public int getPlayerY() {
+    return playerLoc.y;
+  }
+  public boolean isTrapHere() {
+    return isTrap(0, 0);
+  }
+  public int springTrapHere() {
+    return springTrap(0, 0);
+  }
+  public int pickUpPrizeHere() {
+    return pickupPrize();
+  }
+  public int replayBoard() {
+    return replay();
+  }
+  public int endAndScore() {
+    return endGame();
+  }
+  public boolean playerAtEndPublic() {
+    return playerLoc.getX() > (WIDTH - 2*SPACE_SIZE);
   }
   
   /**
